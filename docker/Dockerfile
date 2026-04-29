@@ -131,9 +131,8 @@ WORKDIR ${RSAT}
 
 
 ## <---- Read config and run bash installation scripts
-RUN  source /packages/rsat/RSAT_config.bashrc \
-	&& bash installer/01_ubuntu_packages.bash \
-	&& bash installer/02_python_packages.bash
+RUN  source /packages/rsat/RSAT_config.bashrc && bash -x installer/01_ubuntu_packages.bash 
+RUN  source /packages/rsat/RSAT_config.bashrc && bash -x installer/02_python_packages.bash
 
 ########################################################       Notes       ########################################################
 # When installinng python dependencies you might error with rpy2-3.5.12.tar.gz or PySimpleSOAP-1.16.2.tar.gz
