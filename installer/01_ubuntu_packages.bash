@@ -36,48 +36,13 @@ then
 fi
 
 
-## We need to update apt-get, to avoid trouble with python
+## We need to update apt, to avoid trouble with python
 ## See http://askubuntu.com/questions/350312/i-am-not-able-to-install-easy-install-in-my-ubuntu
-
-## We can then check the increase of disk usage during the different
-## steps of the installation
-# grep ${DEVICE} ${RSAT}/install_logs/df_*.txt
-
-################################################################
-## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-## Still required for Ubuntu 16.04 ? TO BE CHECKED
-## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-## Fix a problem with rabbitmq in the Ubuntu 14.04 distrib
-## wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add -
-
-## Install aptitude, more efficient than apt-get to treat dependencies
-## when installing and uninstalling packages.
-## TO SAVE SPACE, I SUPPRESS aptitude
-## apt-get install aptitude
-
-## For the IFB cloud, it is recommended to start with a apt-get update
-#apt-get update
-#df -m > ${RSAT}/install_logs/df_$(date +%Y-%m-%d_%H-%M-%S)_apt-get_updated.txt
-
-################################################################
-## I tried to run dist-upgrade because it 'can "intelligently" handle
-## changes in the dependencies system. This includes removing packages
-## that are no longer necessary or resolve conflicts between packages
-## that arose because of changes in the dependencies.'
-## http://askubuntu.com/questions/194651/why-use-apt-get-upgrade-instead-of-apt-get-dist-upgrade
-## HOWEVER, THE PERL UPDATE DOES NOT WORK ANYMORE AFTER THAT !!!
-##
-## I thus use apt-get upgrade. However this cannot be part of the
-## default installation since not everyone wants to upgrade apt-get.
-## I thus comment the following instructions.
-##
-# ${OS_INSTALLER} ${INSTALLER_OPT} upgrade
-# df -m > ${RSAT}/install_logs/df_$(date +%Y-%m-%d_%H-%M-%S)_${OS_INSTALLER}_upgrade.txt
-# grep ${DEVICE} ${RSAT}/install_logs/df_*.txt
+sudo apt update
 
 
 ################################################################
-## Required apt-get packages
+## Required apt packages
 PACKAGES_REQUIRED="
 apt-utils
 make
@@ -109,7 +74,6 @@ python3-rpy2
 emacs
 x11-apps
 eog
-ntp
 curl
 libcurl4-openssl-dev
 libcurl4-gnutls-dev
@@ -121,18 +85,23 @@ php
 libapache2-mod-php
 rsync
 libmysqlclient-dev
-libapache2-mod-wsgi-py3
 python-is-python3
+bedtools
+ghostscript
+gnuplot
+python3-weblogo
+ncbi-blast+
+diamond-aligner
 "
 
-## Suppressed for Ubuntu 22.04
-# libapache2-mod-wsgi
 
 
 ################################################################
 ## Packages to be checked by JvH.
 ## These are useful to me, but I am not sure they are required for RSAT.
 PACKAGES_OPT="
+mcl
+chrony
 ess
 yum
 php-elisp
@@ -173,11 +142,10 @@ finger
 "
 
 ################################################################
-## apt-get packages to install Perl modules (not properly speaking
+## apt packages to install Perl modules (not properly speaking
 ## necessary, could be done with cpan, but ensure consistency with
 ## ubuntu OS)
 PACKAGES_PERL="
-bioperl-run
 libbio-das-lite-perl
 libbio-perl-perl
 libclass-std-perl
@@ -201,13 +169,9 @@ libole-storage-lite-perl
 libparallel-forkmanager-perl
 libpostscript-simple-perl
 librest-client-perl
-libsoap-lite-perl
-libsoap-wsdl-perl
 libspreadsheet-xlsx-perl
 libstatistics-distributions-perl
 libxml-compile-cache-perl
-libxml-compile-soap-perl
-libxml-compile-wsdl11-perl
 libxml-parser-perl
 libxml-perl
 libxml-simple-perl
@@ -217,7 +181,8 @@ pmtools
 "
 #libemail-sender-transport-smtp-tls-perl
 
-## We did not find apt-get packages for some required Perl
+
+## We did not find apt packages for some required Perl
 ## libraries. These will have to be installed with cpan.
 PACKAGES_PERL_MISSING="
 libalgorithm-cluster-perl
@@ -225,12 +190,12 @@ libutil-properties-perl
 "
 
 
-## Install the apt-get libraries
+## Install the apt libraries
 PACKAGES="${PACKAGES_REQUIRED} ${PACKAGES_PERL}"
 echo "Packages to be installed with ${OS_INSTALLER} ${INSTALLER_OPT}"
 echo "${PACKAGES}"
 for LIB in ${PACKAGES}; do \
-    echo "`date '+%Y/%m/%d %H:%M:%S'`  installing apt-get library ${LIB}" ; \
+    echo "`date '+%Y/%m/%d %H:%M:%S'`  installing apt library ${LIB}" ; \
     ${OS_INSTALLER} install ${INSTALLER_OPT} ${LIB} > ${RSAT}/install_logs/install_${LIB}_log.txt ; \
     df -m > ${RSAT}/install_logs/df_$(date +%Y-%m-%d_%H-%M-%S)_${LIB}_installed.txt ; \
 done
@@ -240,13 +205,13 @@ echo "Log files are in folder ${RSAT}/install_logs"
 
 ## PROBLEMS WITH Ubuntu 16
 #
-#apt-get install php5 ## E: Package 'php5' has no installation candidate
-#apt-get install libapache2-mod-php5 ## E: Package 'libapache2-mod-php5' has no installation candidate
+#apt install php5 ## E: Package 'php5' has no installation candidate
+#apt install libapache2-mod-php5 ## E: Package 'libapache2-mod-php5' has no installation candidate
 # Fix: php (7) is part of the Ubuntu distribution
 # See: http://askubuntu.com/questions/756879/cant-install-php5-on-ubuntu-16-04
 # I NEED TO CHECK IF THE PHP INTERFACES STILL WORK WITH PHP7.
 #
-# 2016/10/24 07:23:02  installing apt-get library python3-rpy2
+# 2016/10/24 07:23:02  installing apt library python3-rpy2
 # E: Unable to correct problems, you have held broken packages.
 
 
@@ -262,7 +227,7 @@ echo "Log files are in folder ${RSAT}/install_logs"
 ## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ################################################################
-## To free space, remove apt-get packages that are no longer required.a
+## To free space, remove apt packages that are no longer required.a
 # grep ${DEVICE} ${RSAT}/install_logs/df_*.txt
 ${OS_INSTALLER} ${INSTALLER_OPT}  autoremove
 df -m > ${RSAT}/install_logs/df_$(date +%Y-%m-%d_%H-%M-%S)_autoremoved.txt

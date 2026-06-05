@@ -49,16 +49,24 @@ list_versions:
 EXT_APP_TARGETS=\
 	install_vmatch \
 	install_d3 \
-	install_bedtools \
 	install_ensembl_api \
-	install_ghostscript \
-	install_gnuplot \
+	install_ensembl_bioperl
 	install_python \
-	install_weblogo3_pip \
-	install_mcl \
-	install_rnsc \
-	install_ensembl_bioperl \
-	install_blast
+	install_weblogo3_pip 
+	install_ensembl_bioperl 
+  
+# Suppresed 2026-05-17. Note: Weblogo3_pip allows for correct installation of container with python
+#	install_bedtools
+#	install_ghostscript
+#	install_gnuplot
+#	install_weblogo3
+#	install_seqlogo
+#	install_mcl 
+#	install_rnsc 
+#	install_blast
+
+
+
 list_ext_apps:
 	@echo
 	@echo "External applications to install"
@@ -494,7 +502,7 @@ install_biomart_perl:
 	else \
 		echo "Cloning BioMart" ; \
 		(cd ${RSAT}/ext_lib; git clone --branch cvs/release-${BIOMART_VERSION} https://github.com/biomart/biomart-perl); \
- 	fi
+	fi
 	chmod a+w ${BIOMART_DIR}/conf
 	@echo "biomart-perl ${BIOMART_VERSION} installed in ${BIOMART_DIR}"
 

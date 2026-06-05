@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
 source $(dirname $0)/00_config.bash
+OS_INSTALLER=brew
+INSTALLER_OPT=
 
 ################################################################
-## Install all the Ubuntu packages required prior to the installation
+## Install all the Mac OS packages required prior to the installation
 ## of the Regulatory Sequence Analysis Tools (RSAT; http://rsat.eu/).
 
 echo
@@ -12,16 +14,12 @@ echo "!!!!!!!     BEWARE: INSTALLATION REQUIRES SUDO RIGHTS       !!!!"
 echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 echo
 
-
 ## PRIOR REQUIREMENT: Mac developer tools and brew (for make and other utilities)
 
 ################################################################
 ## Required brew packages
-################################################################
-## Required apt-get packages
 PACKAGES_REQUIRED="
 make
-java
 cvs
 wget
 zip
@@ -33,24 +31,28 @@ ghostscript
 gnuplot
 graphviz
 openssl
-mysql-connector-c
-mysql
 emacs
-ntp
 curl
 php
 pkg-config
 python3
+bedtools
 blast
+diamond
 "
 
-## 2023-11-05: JvH suppresses this because python2 is not suppported anymore
-# python
-
+PACKAGED_NOT_REQUIRED="
+mcl
+ntp
+java
+mysql-connector-c
+mysql
+"
 
 ################################################################
 ## This variable was left for consistency with the corresponding
-## ubuntu script
+## ubuntu script, but actually on MAC OS we install all Perl packages
+## with cpan.
 PACKAGES_PERL=""
 
 

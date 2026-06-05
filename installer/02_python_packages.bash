@@ -6,7 +6,7 @@ source $(dirname $0)/00_config.bash
 ## Install some python libraries with pip
 ##
 ## Note: numpy, scipy and matplotlib are supposed to have previously
-## been installed with apt-get under Ubuntu. For other OS, they should
+## been installed with apt under Ubuntu. For other OS, they should
 ## be added to the pip installation.
 
 echo
@@ -17,22 +17,29 @@ echo "!!!!!!!     BEWARE: INSTALLATION REQUIRES SUDO RIGHTS       !!!!"
 echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 echo
 
-apt install -y python3-numpy
-apt install -y python3-scipy
-apt install -y python3-matplotlib 
-apt install -y snakemake 
-apt install -y python3-rpy2 
-apt install -y python3-pysimplesoap 
-apt install -y python3-requests 
-apt install -y python3-yaml
-#apt install -y python3-wsdl
-pip3 install wstools
-apt install -y python3-suds
-apt install -y python3-venv
-apt install -y python3-pip
-# apt install -ypython3-fisher ## 2025-12-29: unable to install
-apt install -y python3-pygraphviz
-# repeated # apt install -y python3-requests   # required for downloading GO terms from biomart
+set -euo pipefail
+
+export DEBIAN_FRONTEND=noninteractive
+
+sudo apt update
+
+PACKAGES_REQUIRED="
+python3-numpy
+python3-scipy
+python3-matplotlib 
+snakemake 
+python3-rpy2 
+python3-pysimplesoap 
+python3-requests 
+python3-yaml
+python3-suds
+python3-venv
+python3-pip
+python3-pygraphviz
+python3-requests
+"
+
+sudo apt install -y ${PACKAGES_REQUIRED}
 
 ## Check disk usage
 df -m > ${RSAT}/install_logs/df_$(date +%Y-%m-%d_%H-%M-%S)_pip_libraries_installed.txt
