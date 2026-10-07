@@ -104,7 +104,7 @@ ENV RSAT_SITE=my_rsat
 
 ## <---- Configure RSAT to be used internally and in web server, this step is needed to generate the RSAT_config.bashrc
 RUN perl perl-scripts/configure_rsat.pl -auto  rsat=${RSAT} rsat_site=${RSAT_SITE} rsat_www=http://${MY_IP}/rsat/ \
-  	rsat_ws=http://${MY_IP}/rsat/ package_manager="apt-get" ucsc_tools=1 ensembl_tools=1
+  	rsat_ws=http://${MY_IP}/rsat/ package_manager="apt" ucsc_tools=1 ensembl_tools=1
 
 
 

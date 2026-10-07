@@ -89,7 +89,6 @@ python-is-python3
 bedtools
 ghostscript
 gnuplot
-python3-weblogo
 ncbi-blast+
 diamond-aligner
 "
